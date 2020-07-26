@@ -25,7 +25,7 @@ export default {
   setup(){
 
     //ref 盒子 用value  基本类型
-    //reactive 代理 object是{{n: 100}}代理人  复杂类型
+    //reactive 代理 object是{{n: 100}}代理人  复杂类型 响应式
     const count  = ref(0)
     const object = reactive({n: 100})
 
