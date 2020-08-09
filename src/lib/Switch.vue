@@ -16,7 +16,7 @@ export default {
     const checked = ref(false);
     const toggle = () => {
         // checked.value  = !checked.value
-        context.emit('input', !props.value)
+        context.emit('update:value', !props.value)
         //this.$emit()
     };
     return { checked, toggle };
