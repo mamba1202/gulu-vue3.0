@@ -1,4 +1,6 @@
-* {
+// [class^="gulu-"]以gulu-开头的
+// [class*=" gulu-"]所有含有 gulu-
+*{
   margin: 0;
   padding: 0;
   box-sizing: border-box;

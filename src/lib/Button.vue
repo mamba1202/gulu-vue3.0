@@ -1,7 +1,11 @@
 <template>
-  <div :size="size">
-    <!-- <button v-bind="$attrs"> -->
-    <button v-bind="rest">
+
+  <!-- :class="[`theme-${theme}`]: theme" -->
+  <div>
+    <button
+      class="gulu-button"
+      :class="{[`gulu-theme-${theme}`]: theme}"
+    >
       <slot />
     </button>
   </div>
@@ -21,22 +25,69 @@
 // props 没有声明的属性会跑到attrs里
 // props 支持string以外的类型， atrrs只有string类型
 export default {
-  inheritAttrs: false, //不让其有继承属性
-  props:{
-      size: String
+  props: {
+    theme: {
+      type: String,
+      default: "button",
+    },
   },
-  setup(props, context) {
-      console.log({...props})
-      console.log({...context.attrs})
-
-    const { size, ...rest } = context.attrs;
-    return {size, rest}
-  },
+  setup(props, context) {},
 };
 </script>
 
 <style lang="scss" scoped>
 div {
-  border: 1px solid red;
+  $h: 32px;
+  $border-color: #d9d9d9;
+  $color: #333;
+  $blue: #40a9ff;
+  $radius: 4px;
+  .gulu-button {
+    box-sizing: border-box;
+    height: $h;
+    padding: 0 12px;
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+    background: white;
+    color: $color;
+    border: 1px solid $border-color;
+    border-radius: $radius;
+    box-shadow: 0 1px 0 fade-out(black, 0.95);
+    & + & {
+      margin-left: 8px;
+    }
+    &:hover,
+    &:focus {
+      color: $blue;
+      border-color: $blue;
+    }
+    &:focus {
+      outline: none;
+    }
+    &::-moz-focus-inner {
+      border: 0;
+    }
+    &.gulu-theme-link {
+      border-color: transparent;
+      box-shadow: none;
+      color: $blue;
+      &:hover,
+      &:focus {
+        color: lighten($blue, 10%);
+      }
+    }
+    &.gulu-theme-text {
+      border-color: transparent;
+      box-shadow: none;
+      color: inherit;
+      &:hover,
+      &:focus {
+        background: darken(white, 5%);
+      }
+    }
+  }
 }
 </style>
