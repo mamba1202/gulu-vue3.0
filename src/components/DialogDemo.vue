@@ -8,7 +8,18 @@
     :closeOnClickOverlay='false'
     :ok="f1"
     :cancel="f2"
-  ></Dialog>
+  >
+
+    <template v-slot:content>
+      <strong>你好</strong>
+      <div>slot自定义内容</div>
+    </template>
+
+    <template v-slot:title>
+      <strong>加粗的标题</strong>
+    </template>
+
+  </Dialog>
 
 </template>
 
