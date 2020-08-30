@@ -1,28 +1,33 @@
 <template>
 
   <template v-if="visible">
-      <Teleport to="body">
-    <div
-      class="gulu-dialog-overlay"
-      @click="OnClickOverlay"
-    ></div>
-    <div class="gulu-dialog-wrapper"></div>
+    <Teleport to="body">
+      <div
+        class="gulu-dialog-overlay"
+        @click="OnClickOverlay"
+      ></div>
+      <div class="gulu-dialog-wrapper">
+        <div class="gulu-dialog">
 
-    <div class="gulu-dialog">
+          <header>
+            <slot name="title" /><span
+              class="gulu-dialog-close"
+              @click="close"
+            ></span></header>
+          <main>
+            <slot name="content" />
+          </main>
 
-      <header><slot name="title"/><span
-          class="gulu-dialog-close"
-          @click="close"
-        ></span></header>
-      <main>
-        <slot name="content"/>
-      </main>
+          <footer>
+            <Button
+              level='main'
+              @click="ok"
+            >OK</Button>
+            <Button @click="cancel">Cancel</Button>
+          </footer>
+        </div>
+      </div>
 
-      <footer>
-        <Button level='main'>OK</Button>
-        <Button>Cancel</Button>
-      </footer>
-    </div>
     </Teleport>
   </template>
 </template>
@@ -71,7 +76,10 @@ export default {
         close();
       }
     };
-    const cancel = () => {};
+    const cancel = () => {
+      props.cancel?.();
+      close();
+    };
 
     return {
       close,
