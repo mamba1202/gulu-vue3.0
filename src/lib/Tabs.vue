@@ -9,7 +9,7 @@
         @click="select(t)"
         :class="{selected: t==selected}"
         v-for="(t,index) in titles"
-        :ref="el => { if (el) navItems[index] = el }"
+        :ref="el => { if (t===selected) selecteddItem = el }"
         :key="index"
       >{{t}}</div>
       <div
@@ -31,7 +31,7 @@
 
 <script>
 import Tab from "./Tab.vue";
-import { computed, ref, onMounted, onUpdated } from "vue";
+import { computed, ref, watchEffect, onMounted } from "vue";
 export default {
   props: {
     selected: {
@@ -39,44 +39,46 @@ export default {
     },
   },
   setup(props, context) {
-    const navItems = ref([]);
+    const selecteddItem = ref(null);
     const indicator = ref(null);
     const container = ref(null);
-    const x = () => {
-      const divs = navItems.value;
-      const result = divs.filter((div) =>
-        div.classList.contains("selected")
-      )[0];
-      console.log(result);
-      const { width, left: left1 } = result.getBoundingClientRect();
+
+    // onMounted(x); // 只在第一次更新执行
+    // onUpdated(x); //更新时调用
+
+    onMounted(() => {
+      console.log("mounted");
+    });
+    watchEffect(() => {
+      console.log("watcheffect");
+
+      if(selecteddItem.value&&indicator.value){
+
+      const {
+        width,
+        left: left1,
+      } = selecteddItem.value.getBoundingClientRect();
       indicator.value.style.width = width + "px";
 
       const { left: left2 } = container.value.getBoundingClientRect();
       const left = left1 - left2;
       indicator.value.style.left = left + "px";
-    };
+      }
 
-      // 只在第一次更新执行
-
-    onMounted(x);
-
-    onUpdated(x);
+    });
     const defaults = context.slots.default();
 
     defaults.forEach((tag) => {
       if (tag.type != Tab) {
         throw new Error("Tabs 子标签必须是 Tab");
       }
-      console.log(tag);
     });
 
     const current = computed(() => {
-      console.log("导航切换");
       return defaults.filter((tag) => {
         return tag.props.title == props.selected;
       })[0];
     });
-    console.log(current);
 
     const titles = defaults.map((tag) => {
       return tag.props.title;
@@ -91,9 +93,9 @@ export default {
       titles,
       current,
       select,
-      navItems,
       indicator,
       container,
+      selecteddItem,
     };
   },
 };
