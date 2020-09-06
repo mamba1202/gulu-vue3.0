@@ -1,46 +1,102 @@
 <template>
-<div class="gulu-tabs">
-  <div class="gulu-tabs-nav">
-    <div class="gulu-tabs-nav-item" 
-    :class="{selected: t==selected}"
-    v-for="(t,index) in titles" :key="index">{{t}}</div>
+  <div class="gulu-tabs">
+    <div
+      class="gulu-tabs-nav"
+      ref="container"
+    >
+      <div
+        class="gulu-tabs-nav-item"
+        @click="select(t)"
+        :class="{selected: t==selected}"
+        v-for="(t,index) in titles"
+        :ref="el => { if (el) navItems[index] = el }"
+        :key="index"
+      >{{t}}</div>
+      <div
+        class="gulu-tabs-nav-indicator"
+        ref="indicator"
+      ></div>
+    </div>
+    <div class="gulu-tabs-content">
+      <component
+        class="gulu-tabs-content-item"
+        :is="current"
+        :key="current.props.title"
+      />
+
+      <!-- :key="current.props.title"解决tab内容缓存 -->
+    </div>
   </div>
-  <div class="gulu-tabs-content">
-    <component class="gulu-tabs-content-item" v-for="(c,index) in defaults" :is="c" :key="index" />
-  </div>
-</div>
 </template>
 
 <script>
-import Tab from './Tab.vue'
+import Tab from "./Tab.vue";
+import { computed, ref, onMounted, onUpdated } from "vue";
 export default {
-    props:{
-       selected: {
-          type: String,
-     }
+  props: {
+    selected: {
+      type: String,
     },
-    setup(props,context){
-    console.log({...context.slots.default()})
-    const defaults  = context.slots.default()
+  },
+  setup(props, context) {
+    const navItems = ref([]);
+    const indicator = ref(null);
+    const container = ref(null);
+    const x = () => {
+      const divs = navItems.value;
+      const result = divs.filter((div) =>
+        div.classList.contains("selected")
+      )[0];
+      console.log(result);
+      const { width, left: left1 } = result.getBoundingClientRect();
+      indicator.value.style.width = width + "px";
 
-    defaults.forEach((tag)=>{
-        if(tag.type!=Tab){
-            throw new Error('Tabs 子标签必须是 Tab')
-        }
-        console.log(tag)
-    })
+      const { left: left2 } = container.value.getBoundingClientRect();
+      const left = left1 - left2;
+      indicator.value.style.left = left + "px";
+    };
 
-    const titles  = defaults.map((tag)=>{
-        return tag.props.title
-    })
+      // 只在第一次更新执行
 
-    return{
-        defaults,
-        titles
-    }
+    onMounted(x);
 
-    }
-}
+    onUpdated(x);
+    const defaults = context.slots.default();
+
+    defaults.forEach((tag) => {
+      if (tag.type != Tab) {
+        throw new Error("Tabs 子标签必须是 Tab");
+      }
+      console.log(tag);
+    });
+
+    const current = computed(() => {
+      console.log("导航切换");
+      return defaults.filter((tag) => {
+        return tag.props.title == props.selected;
+      })[0];
+    });
+    console.log(current);
+
+    const titles = defaults.map((tag) => {
+      return tag.props.title;
+    });
+
+    const select = (title) => {
+      context.emit("update:selected", title);
+    };
+
+    return {
+      defaults,
+      titles,
+      current,
+      select,
+      navItems,
+      indicator,
+      container,
+    };
+  },
+};
 </script>
 
 <style lang="scss">
@@ -52,6 +108,7 @@ $border-color: #d9d9d9;
     display: flex;
     color: $color;
     border-bottom: 1px solid $border-color;
+    position: relative;
     &-item {
       padding: 8px 0;
       margin: 0 16px;
@@ -59,9 +116,19 @@ $border-color: #d9d9d9;
       &:first-child {
         margin-left: 0;
       }
+
       &.selected {
         color: $blue;
       }
+    }
+    &-indicator {
+      position: absolute;
+      height: 3px;
+      background: $blue;
+      left: 0;
+      bottom: -1px;
+      width: 100px;
+      transition: all 250ms;
     }
   }
   &-content {
