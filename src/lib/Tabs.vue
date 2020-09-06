@@ -47,25 +47,21 @@ export default {
     // onUpdated(x); //更新时调用
 
     onMounted(() => {
-      console.log("mounted");
+      watchEffect(() => {
+        if (selecteddItem.value && indicator.value) {
+          const {
+            width,
+            left: left1,
+          } = selecteddItem.value.getBoundingClientRect();
+          indicator.value.style.width = width + "px";
+
+          const { left: left2 } = container.value.getBoundingClientRect();
+          const left = left1 - left2;
+          indicator.value.style.left = left + "px";
+        }
+      });
     });
-    watchEffect(() => {
-      console.log("watcheffect");
 
-      if(selecteddItem.value&&indicator.value){
-
-      const {
-        width,
-        left: left1,
-      } = selecteddItem.value.getBoundingClientRect();
-      indicator.value.style.width = width + "px";
-
-      const { left: left2 } = container.value.getBoundingClientRect();
-      const left = left1 - left2;
-      indicator.value.style.left = left + "px";
-      }
-
-    });
     const defaults = context.slots.default();
 
     defaults.forEach((tag) => {
