@@ -7,7 +7,8 @@
 
 
 <script>
-import Switch from "../components/SwitchDemo";
+import Switch from "../lib/Switch.vue";
+
 export default {
   components: {
     Switch,
