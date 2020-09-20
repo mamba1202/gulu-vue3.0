@@ -1,71 +1,40 @@
 <template>
-  <button
-    :class="{checked:value}"
-    @click="toggle"
-  ><span></span></button>
-  <div>{{value}}</div>
+  <button class="gulu-switch" @click="toggle" :class="{'gulu-checked':value}">
+    <span></span>
+  </button>
 </template>
-
-<script>
+<script lang="ts">
 import { ref } from "vue";
 export default {
   props: {
     value: Boolean,
   },
   setup(props, context) {
-    const checked = ref(false);
     const toggle = () => {
-      // checked.value  = !checked.value
       context.emit("update:value", !props.value);
-      //this.$emit()
     };
-    return { checked, toggle };
-    // toggle不导出模板无法使用
-  },
+    return { toggle };
+  }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 $h: 22px;
 $h2: $h - 4px;
-
-button {
-  height: $h;
-  width: $h * 2;
-  border: none;
-  background: gray;
-  border-radius: $h/2;
-  position: relative;
-
-  span {
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    height: $h2;
-    width: $h2;
-    background: white;
-    border-radius: $h2/2;
-    transition: left 300ms;
+.gulu-switch {
+  height: $h; width: $h * 2; border: none; background: #bfbfbf; border-radius: $h/2; position: relative;
+  > span {
+    position: absolute; top: 2px; left: 2px; height: $h2; width: $h2; background: white; border-radius: $h2 / 2; transition: all 250ms;
   }
-  &.checked {
-    background: blue;
+  &.gulu-checked { background: #1890ff;
+    > span { left: calc(100% - #{$h2} - 2px); }
   }
-  &.checked > span {
-    left: calc(100% - #{$h2} - 2px);
-  }
-  &:focus {
-    outline: none;
-  }
+  &:focus { outline: none; }
   &:active {
-    > span {
-      width: $h2 + 4px;
-    }
+    > span { width: $h2 + 4px; }
   }
-  &.checked:active {
-    > span {
-      width: $h2 + 4px;
-      margin-left: -4px;
-    }
+  &.gulu-checked:active {
+    > span { width: $h2 + 4px; margin-left: -4px; }
   }
 }
 </style>

@@ -5,7 +5,6 @@
   </button>
 </template>
 <script lang="ts">
-// disabled为默认事件 但其传入需绑定
 import { computed } from "vue";
 export default {
   props: {
@@ -31,7 +30,6 @@ export default {
     }
   },
   setup(props) {
-      console.log(props.loading)
     const { theme, size, level } = props;
     const classes = computed(() => {
       return {
