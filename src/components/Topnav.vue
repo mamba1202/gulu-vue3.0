@@ -1,47 +1,48 @@
 <template>
-  <div class="topnav">
-    <div class="logo">
-      <router-link to="/">
-
-        <svg class="icon">
-          <use xlink:href="#icon-lunzi"></use>
-        </svg>
-      </router-link>
-
-    </div>
-    <ul class="menu">
-      <li>菜单1</li>
-      <li>菜单2</li>
-    </ul>
-    <svg
-      class="toggleAside"
-      @click="toggleMenu"
-      v-if="toggleMenuButtonVisible"
-    >
-      <use xlink:href="#icon-menu"></use>
+<div class="topnav">
+  <router-link to="/" class="logo">
+    <svg class="icon">
+      <use xlink:href="#icon-king"></use>
     </svg>
-  </div>
+  </router-link>
+  <ul class="menu">
+    <li>
+      <router-link to="/doc">文档</router-link>
+    </li>
+  </ul>
+  <svg v-if="toggleMenuButtonVisible" class="toggleAside" @click="toggleMenu">
+    <use xlink:href="#icon-menu"></use>
+  </svg>
+</div>
 </template>
+
 <script lang="ts">
-import { inject, Ref } from "vue";
+import {
+  inject,
+  Ref
+} from "vue";
 export default {
   props: {
     toggleMenuButtonVisible: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   setup() {
-    const menuVisible = inject<Ref<boolean>>("menuVisible"); // get
+    const menuVisible = inject < Ref < boolean >> ("menuVisible"); // get
     const toggleMenu = () => {
       menuVisible.value = !menuVisible.value;
     };
-    return { toggleMenu };
+    return {
+      toggleMenu
+    };
   },
 };
 </script>
+
 <style lang="scss" scoped>
 $color: #007974;
+
 .topnav {
   color: $color;
   display: flex;
@@ -50,29 +51,33 @@ $color: #007974;
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 10;
+  z-index: 20;
   justify-content: center;
   align-items: center;
-  > .logo {
+
+  >.logo {
     max-width: 6em;
     margin-right: auto;
-    > svg {
+
+    >svg {
       width: 32px;
       height: 32px;
     }
   }
-  > .menu {
+
+  >.menu {
     display: flex;
     white-space: nowrap;
     flex-wrap: nowrap;
-    > li {
+
+    >li {
       margin: 0 1em;
     }
   }
-  > .toggleAside {
-    font-size: 32px;
-    width: 24px;
-    height: 24px;
+
+  >.toggleAside {
+    width: 32px;
+    height: 32px;
     position: absolute;
     left: 16px;
     top: 50%;
@@ -80,14 +85,17 @@ $color: #007974;
     display: none;
     background: fade-out(black, 0.9);
   }
+
   @media (max-width: 500px) {
-    > .menu {
+    >.menu {
       display: none;
     }
-    > .logo {
+
+    >.logo {
       margin: 0 auto;
     }
-    > .toggleAside {
+
+    >.toggleAside {
       display: inline-block;
     }
   }
