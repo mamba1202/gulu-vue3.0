@@ -7,7 +7,7 @@
       <h2>一个厉害的 UI 框架</h2>
       <p class="actions">
         <a href="https://github.com/mamba1202/vite-vue3.0">GitHub</a>
-        <router-link to="/doc">开始</router-link>
+        <router-link to="/doc/intro">开始</router-link>
       </p>
     </div>
   </div>
